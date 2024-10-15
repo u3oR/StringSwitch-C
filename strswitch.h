@@ -80,5 +80,15 @@ StrSwitchV2(str,
         break;
 }
 */
+
+#if 1
+
+#define StrSwitch(x) { do {
+#define StrCase(str) 
+#defien StrSwitchEnd() while(0); } 
+
+#endif
+
+
 #endif
 // End
