@@ -83,10 +83,14 @@ StrSwitchV2(str,
 
 #if 1
 
-#define StrSwitch(x) { do {
-#define StrCase(str) 
-#defien StrSwitchEnd() while(0); } 
+#define StrSwitch(x)    { int _SS_FLAG = 0; const char *_SS_STR = x; do {
+#define StrCase(str)    } if ((_SS_FLAG != 0) || (strcmp(_SS_STR, str) == 0))) { _SS_FLAG = 1;
+#define StrDefault()    } if ((_SS_GLAG != 0) ) {
+#defien StrSwitchEnd    } while(0); } 
 
+/* Usage 
+
+*/
 #endif
 
 
