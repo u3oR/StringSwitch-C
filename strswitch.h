@@ -90,6 +90,22 @@ StrSwitchV2(str,
 
 /* Usage 
 
+int main() {
+    const char *input_str = "banana";
+
+    StrSwitch(input_str)
+        StrCase("apple")
+            printf("Matched apple!\n");
+        StrCase("banana")
+            printf("Matched banana!\n");
+        StrCase("cherry")
+            printf("Matched cherry!\n");
+        StrDefault()
+            printf("No match found.\n");
+    StrSwitchEnd
+
+    return 0;
+}
 */
 #endif
 
