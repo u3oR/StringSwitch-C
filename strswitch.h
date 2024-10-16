@@ -3,12 +3,14 @@
 
 #include <string.h>
 
+#if 1
+
 typedef struct StringPair {
     int id;
     const char *str;
 } StringPair_t;
 
-#if 1
+
 #define STRINGPAIR_END (StringPair_t){.id = -1, .str = NULL}
 
 #define StrCase(index, ...) case (index): ((void)(NULL,##__VA_ARGS__));
