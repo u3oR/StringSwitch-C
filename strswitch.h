@@ -8,11 +8,21 @@ typedef struct StringPair {
     const char *str;
 } StringPair_t;
 
+#if 1
 #define STRINGPAIR_END (StringPair_t){.id = -1, .str = NULL}
 
-#define StrCase(index, ...) case (index): ((void)(NULL, ##__VA_ARGS__));
+#define StrCase(index, ...) case (index): ((void)(NULL,##__VA_ARGS__));
 #define StrDefault()        default:
 
+#define StrSwitch(input_str, strpair_array) \
+        switch(({ int __case_value = -1;                \
+            const StringPair_t *_ptr = strpair_array;   \
+            while(_ptr->str) {                          \
+                if(!strcmp(input_str, _ptr->str)) {     \
+                    __case_value = _ptr->id;  break;    \
+                } _ptr++;                               \
+            } __case_value;}))
+/*
 #define StrSwitch(input_str, strpair_array) \
         int __case_value = -1;                          \
         {                                               \
@@ -25,90 +35,68 @@ typedef struct StringPair {
                 _ptr++;                                 \
             }                                           \
         } switch(__case_value)
-
-/* Usage 
-const StringPair_t pair[] = {
-    {1, "CommandA"},
-    {2, "CommandB"},
-    {3, "CommandC"},
-    STRINGPAIR_END
-};
-const char *key = "CommandC";
-StrSwitch(key, pair)
-{
-    StrCase(1, "CommandA")
-    {
-        // do something ...
-        break;
-    }
-    StrDefault()
-    {
-        // unknown command
-        break;
-    }
-}
 */
-
-#define StrSwitchV2(input_str, ...) \
-    int __case_value = -1;                          \
-    {                                               \
-        const StringPair_t strpair_array[] = {      \
-            __VA_ARGS__,                            \
-            STRINGPAIR_END                          \
-        };                                          \
-        const StringPair_t *ptr = strpair_array;    \
-        while(ptr->str != STRINGPAIR_END.str) {     \
-            if(strcmp(ptr->str, inout_str) == 0) {  \
-                __case_value = ptr->id;             \
-                break;                              \
-            }                                       \
-            ptr++;                                  \
-        }                                           \
-    } switch (__case_value)
-
-/* Usage
-StrSwitchV2(str, 
-    {1, "CMDA"},
-    {2, "CMDB"},
-    {3, "CMDC"})
-{
-    case 1:
-        break;
-    case 2:
-        break;
-    default:
-        break;
-}
-*/
-
-#if 1
-
-#define StrSwitch(x)    { int _SS_FLAG = 0; const char *_SS_STR = x; do {
-#define StrCase(str)    } if ((_SS_FLAG != 0) || (strcmp(_SS_STR, str) == 0))) { _SS_FLAG = 1;
-#define StrDefault()    } if ((_SS_GLAG != 0) ) {
-#defien StrSwitchEnd    } while(0); } 
 
 /* Usage 
 
-int main() {
-    const char *input_str = "banana";
+    const char *command = "start";
 
-    StrSwitch(input_str)
-        StrCase("apple")
-            printf("Matched apple!\n");
-        StrCase("banana")
-            printf("Matched banana!\n");
-        StrCase("cherry")
-            printf("Matched cherry!\n");
+    StringPair_t commands[] = {
+        {1, "start"},
+        {2, "stop"},
+        {3, "restart"},
+        STRINGPAIR_END
+    };
+
+    StrSwitch(command, commands) {
+        StrCase(1, "start") {
+            printf("Starting...\n");
+            break;
+        }
+        StrCase(2)
+            printf("Stopping...\n");
+            break;
+        StrCase(3)
+            printf("Restarting...\n");
+            break;
         StrDefault()
-            printf("No match found.\n");
-    StrSwitchEnd
+            printf("Unknown command\n");
+    }
 
-    return 0;
-}
+*/
+#endif
+
+
+#if 0
+
+#define StrSwitch(x)    { int _hit_flag = 0, _continue_flag = 0; const char *_str = x; do {{
+#define StrCase(str)    } if ((_continue_flag != 0) || strcmp(_str, str) == 0) { _hit_flag = 1; _continue_flag = 1;
+#define StrDefault()    } if ((_hit_flag == 0) || (_continue_flag != 0)) {
+#define StrSwitchEnd    }} while(0); }
+
+/* Usage 
+
+    const char * key = "CommandA";
+
+    StrSwitch(key) {
+
+        StrCase("CommandA")
+        StrCase("CommandB") {
+            printf("match str %s\n", key);
+            break;
+        }
+
+        StrDefault() {
+            printf("match str unknown\n");
+            break;
+        }
+        
+    } StrSwitchEnd
+
 */
 #endif
 
 
 #endif
 // End
+ 
