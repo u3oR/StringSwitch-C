@@ -1,78 +1,157 @@
 # StringSwitch-C
 
-Description (English/Chinese):
-This repository provides two versions of a C macro that simulate a switch statement for string matching. The macros allow developers to implement a switch-case style structure based on string input, which is not natively supported in C. The repository contains both a predefined string-integer mapping approach (StrSwitch) and a more flexible variadic version (StrSwitchV2).
+## README for `strswitch.h`
 
-本仓库提供了两个版本的 C 语言宏，用于模拟基于字符串的 switch 语句。这些宏允许开发者使用基于字符串输入的 switch-case 结构，解决了 C 语言不支持字符串 switch 的问题。仓库中包含预定义字符串-整数映射的实现（StrSwitch），以及一个更灵活的变参版本（StrSwitchV2）。
+---
 
-Features (English/Chinese):
-StrSwitch Macro: Uses a predefined StringPair_t array, which allows the user to associate strings with integer IDs for efficient string-based switching.
+#### Overview
+This project provides a macro-based utility for string matching using `switch-case` semantics in C. It defines two methods to facilitate efficient string comparisons with cleaner syntax. This header simplifies the process of handling multiple string cases, improving readability and reducing error-prone code.
 
-StrSwitch 宏：使用预定义的 StringPair_t 数组，允许用户将字符串与整数 ID 关联，以便实现高效的基于字符串的切换。
+---
 
-StrSwitchV2 Macro: A more flexible, variadic version that accepts inline string-ID pairs directly as arguments without requiring a predefined array.
+### Features
+- **Two implementations**: Choose between two methods based on code style and preference.
+- **Macro-driven string comparisons**: Use familiar `switch-case` constructs for string matching.
+- **Easy-to-read code**: Reduces the complexity of repetitive `if-else` string comparisons.
+- **Support for a default case** when no string matches.
 
-StrSwitchV2 宏：更灵活的变参版本，允许用户直接传递字符串-ID 对作为参数，无需预定义数组。
+---
 
-String-based case matching: Allows direct string comparisons in the switch-case structure, giving the look and feel of a typical switch statement.
+### Usage
 
-基于字符串的 case 匹配：允许在 switch-case 结构中直接进行字符串比较，模拟出与标准 switch 语句相似的用法。
+#### First Implementation (Enabled by `#if 1`)
 
-Compact and readable syntax: The syntax closely resembles the standard switch-case structure, making it familiar and easy to use for C developers.
+In this version, you define string pairs using the `StringPair_t` structure. Each pair consists of an `id` and a corresponding string. The `StrSwitch` macro performs string comparisons and evaluates cases based on the `id`.
 
-简洁且可读的语法：语法设计类似于标准的 switch-case 结构，使 C 开发者可以轻松使用。
-
-Example Usage (English/Chinese):
-StrSwitch (Predefined String Array) / StrSwitch（预定义字符串数组）:
-
+**Example:**
 ```c
-const StringPair_t pair[] = {
-    {1, "CommandA"},
-    {2, "CommandB"},
-    {3, "CommandC"},
+const char *command = "start";
+
+StringPair_t commands[] = {
+    {1, "start"},
+    {2, "stop"},
+    {3, "restart"},
     STRINGPAIR_END
 };
-const char *key = "CommandC";
 
-StrSwitch(key, pair)
-{
-    StrCase(1, "CommandA")
-    {
-        // Handle CommandA
+StrSwitch(command, commands) {
+    StrCase(1, "start") {
+        printf("Starting...\n");
         break;
     }
-    StrCase(2, "CommandB")
-    {
-        // Handle CommandB
+    StrCase(2)
+        printf("Stopping...\n");
         break;
-    }
+    StrCase(3)
+        printf("Restarting...\n");
+        break;
     StrDefault()
-    {
-        // Handle unknown commands
+        printf("Unknown command\n");
+}
+```
+
+---
+
+#### Second Implementation (Enabled by `#if 0`)
+
+The second version offers an alternative string matching syntax. It uses `StrSwitch`, `StrCase`, `StrDefault`, and `StrSwitchEnd` macros to simulate a `switch-case` structure for strings.
+
+**Example:**
+```c
+const char *key = "CommandA";
+
+StrSwitch(key) {
+
+    StrCase("CommandA")
+    StrCase("CommandB") {
+        printf("match str %s\n", key);
         break;
     }
-}
+
+    StrDefault() {
+        printf("match str unknown\n");
+        break;
+    }
+    
+} StrSwitchEnd
 ```
 
-StrSwitchV2 (Variadic String Matching) / StrSwitchV2（变参字符串匹配）:
+---
+
+### 中文
+
+#### 概述
+该项目提供了基于宏定义的工具，用于在 C 语言中实现类似 `switch-case` 的字符串匹配。此头文件定义了两种方法，简化了字符串匹配的过程，使代码更清晰、更易读，并减少了重复性代码的出错风险。
+
+---
+
+### 功能特点
+- **两种实现方式**：可以根据代码风格和需求选择不同的实现。
+- **基于宏的字符串比较**：使用类似 `switch-case` 的语法结构进行字符串匹配。
+- **代码清晰易读**：减少了复杂的 `if-else` 语句。
+- **支持默认情况**：当没有匹配的字符串时执行默认操作。
+
+---
+
+### 用法
+
+#### 第一种实现方式（通过 `#if 1` 启用）
+
+在此实现中，通过 `StringPair_t` 结构体定义字符串对。每对包含一个 `id` 和对应的字符串。`StrSwitch` 宏用于进行字符串比较，并根据 `id` 匹配对应的 `case`。
+
+**示例：**
 ```c
-const char *key = "CMDB";
+const char *command = "start";
 
-StrSwitchV2(key,
-    {1, "CMDA"},
-    {2, "CMDB"},
-    {3, "CMDC"})
-{
-    case 1:
-        // Handle CMDA
+StringPair_t commands[] = {
+    {1, "start"},
+    {2, "stop"},
+    {3, "restart"},
+    STRINGPAIR_END
+};
+
+StrSwitch(command, commands) {
+    StrCase(1, "start") {
+        printf("Starting...\n");
         break;
-    case 2:
-        // Handle CMDB
+    }
+    StrCase(2)
+        printf("Stopping...\n");
         break;
-    default:
-        // Handle unknown commands
+    StrCase(3)
+        printf("Restarting...\n");
         break;
+    StrDefault()
+        printf("Unknown command\n");
 }
 ```
 
-// END
+---
+
+#### 第二种实现方式（通过 `#if 0` 启用）
+
+此实现方式提供了另一种字符串匹配的语法。通过 `StrSwitch`、`StrCase`、`StrDefault` 和 `StrSwitchEnd` 宏来模拟字符串的 `switch-case` 结构。
+
+**示例：**
+```c
+const char *key = "CommandA";
+
+StrSwitch(key) {
+
+    StrCase("CommandA")
+    StrCase("CommandB") {
+        printf("match str %s\n", key);
+        break;
+    }
+
+    StrDefault() {
+        printf("match str unknown\n");
+        break;
+    }
+    
+} StrSwitchEnd
+```
+
+---
+
+This README provides a detailed guide on how to use the two string-switch implementations, including both Chinese and English documentation.
