@@ -10,7 +10,7 @@ typedef struct StringPair {
 
 #define STRINGPAIR_END (StringPair_t){.id = -1, .str = NULL}
 
-#define StrCase(index, str) case (index): ((void)str);
+#define StrCase(index, ...) case (index): ((void)(NULL, ##__VA_ARGS__));
 #define StrDefault()        default:
 
 #define StrSwitch(input_str, strpair_array) \
